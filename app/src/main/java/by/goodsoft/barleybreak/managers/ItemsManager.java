@@ -44,7 +44,7 @@ public class ItemsManager {
                     new ItemActionCallback() {
                         @Override
                         public void onClick(Item item) {
-                            swap(item);
+                            swap(item, true);
                         }
                     });
             container.addView(lastItem.getView());
@@ -61,11 +61,11 @@ public class ItemsManager {
         }
     }
 
-    private void swap(Item swapItem) {
+    private void swap(Item swapItem, boolean animateSwipe) {
         if (isItemsNearby(lastItem.getXPosition(), swapItem.getXPosition(), lastItem.getYPosition(), swapItem.getYPosition())) {
             Item temp = lastItem.clone();
-            lastItem.setPosition(swapItem.getPosition());
-            swapItem.setPosition(temp.getPosition());
+            lastItem.setPosition(swapItem.getPosition(), false);
+            swapItem.setPosition(temp.getPosition(), true);
             if (isAllElementsInTheirPositions()) {
                 Toast.makeText(activity, "WIN", Toast.LENGTH_LONG).show();
                 activity.finish();

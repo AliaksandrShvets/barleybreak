@@ -8,6 +8,7 @@ import java.util.Random;
 
 import by.goodsoft.barleybreak.R;
 import by.goodsoft.barleybreak.callbacks.ItemActionCallback;
+import by.goodsoft.barleybreak.utils.AnimationUtils;
 
 /**
  * Created by Aleksandr Shvets on 20.10.2017.
@@ -52,9 +53,16 @@ public class Item implements Cloneable {
     }
 
     public void setPosition(int position) {
+        setPosition(position, false);
+    }
+
+    public void setPosition(int position, boolean animateMovement) {
         this.position = position;
         xPosition = position % rank;
         yPosition = position / rank;
+        if (animateMovement) {
+            view.startAnimation(AnimationUtils.getTranslateAnimation(view.getX(),xPosition * size,view.getY(),yPosition * size));
+        }
         view.setX(xPosition * size);
         view.setY(yPosition * size);
     }
