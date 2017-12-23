@@ -1,5 +1,6 @@
 package by.goodsoft.barleybreak.managers;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -17,30 +18,25 @@ import by.goodsoft.barleybreak.utils.AnimationUtils;
 import by.goodsoft.barleybreak.utils.RandomUtils;
 
 /**
- * Created by Aleksandr Shvets on 21.10.2017.
+ * Created by Aleksandr Shvets
+ * on 21.10.2017.
  */
 
 public class ItemsManager {
 
-    public static final float FIELD_SIZE = 0.9f;
-
-    private Activity activity;
-    private List<Item> items;
+    private List<Item> items = new ArrayList<>();
     private Item lastItem;
     private FieldActionCallback callback;
     private int rank;
-    private int swapCount;
+    private int swapCount = 0;
 
     public ItemsManager(Activity activity, FrameLayout container, int rank, FieldActionCallback callback) {
-        this.activity = activity;
         this.rank = rank;
         this.callback = callback;
-        callback.onSwap(swapCount = 0);
         initItems(activity, container);
     }
 
     private void initItems(Activity activity, FrameLayout container) {
-        items = new ArrayList<>();
         DisplayMetrics metrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
         for (int i = 0; i < rank * rank; i++) {
@@ -52,35 +48,34 @@ public class ItemsManager {
                     new ItemActionCallback() {
                         @Override
                         public void onClick(Item item) {
-                            swap(item, true);
+                            swap(item);
                         }
                     });
             container.addView(lastItem.getView());
             items.add(lastItem);
         }
         lastItem.getView().setVisibility(View.INVISIBLE);
+        callback.onSwap(0);
         mix();
     }
 
-    public void mix() {
+    private void mix() {
         List<Integer> randomList = RandomUtils.getRandomList(items.size());
         for (int i = 0; i < randomList.size(); i++) {
             items.get(i).setPosition(randomList.get(i));
-            if (i<randomList.size()-1)
-            items.get(i).getView().startAnimation(AnimationUtils.getScaleAnimation(3f, 1f, (randomList.get(i) / rank + randomList.get(i) % rank)));
+            if (i < randomList.size() - 1)
+                items.get(i).getView().startAnimation(AnimationUtils.getScaleAnimation(items.get(i).getView(), (randomList.get(i) / rank + randomList.get(i) % rank)));
         }
     }
 
-    private void swap(Item swapItem, boolean animateSwipe) {
+    private void swap(Item swapItem) {
         if (isItemsNearby(lastItem.getXPosition(), swapItem.getXPosition(), lastItem.getYPosition(), swapItem.getYPosition())) {
-            Item temp = lastItem.clone();
+            int lastPosition = lastItem.getPosition();
             lastItem.setPosition(swapItem.getPosition(), false);
-            swapItem.setPosition(temp.getPosition(), animateSwipe);
-            if (isAllElementsInTheirPositions()) {
-                callback.onWin();
-            }
+            swapItem.setPosition(lastPosition, true);
             swapCount++;
             callback.onSwap(swapCount);
+            checkAllElementsInTheirPositions();
         }
     }
 
@@ -88,13 +83,13 @@ public class ItemsManager {
         return (Math.abs(x1 - x2) + Math.abs(y1 - y2)) == 1;
     }
 
-    private boolean isAllElementsInTheirPositions() {
+    private void checkAllElementsInTheirPositions() {
         for (int i = 0; i < items.size(); i++) {
             if (i != items.get(i).getPosition()) {
-                return false;
+                return;
             }
         }
-        return true;
+        callback.onWin();
     }
 
     public static List<View> generateStaticItems(LayoutInflater inflater, View view, int rank, int itemSize, int fieldLeft, int fieldTop) {

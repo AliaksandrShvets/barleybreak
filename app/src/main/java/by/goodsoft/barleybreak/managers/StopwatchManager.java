@@ -1,7 +1,5 @@
 package by.goodsoft.barleybreak.managers;
 
-import android.util.Log;
-
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -9,12 +7,13 @@ import java.util.TimerTask;
 import by.goodsoft.barleybreak.callbacks.StopwatchCallback;
 
 /**
- * Created by Aleksandr Shvets on 16.12.2017.
+ * Created by Aleksandr Shvets
+ * on 16.12.2017.
  */
 
 public class StopwatchManager {
 
-    public static final int ONE_SECOND_IN_MILLIS = 1000;
+    private static final int ONE_SECOND_IN_MILLIS = 1000;
 
     private static Timer timer;
     private StopwatchCallback callback;
@@ -46,8 +45,10 @@ public class StopwatchManager {
     }
 
     public void stopTimer() {
-        isStarted = false;
-        timer.cancel();
-        millis = (int) ((new Date().getTime() - startMillis + millis) % 1000);
+        if (isStarted) {
+            isStarted = false;
+            timer.cancel();
+            millis = (int) ((new Date().getTime() - startMillis + millis) % 1000);
+        }
     }
 }

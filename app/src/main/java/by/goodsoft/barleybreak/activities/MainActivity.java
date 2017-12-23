@@ -8,12 +8,13 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TextView;
 
-import by.goodsoft.barleybreak.FieldFragment;
+import by.goodsoft.barleybreak.fragments.FieldFragment;
 import by.goodsoft.barleybreak.R;
 import by.goodsoft.barleybreak.adapters.FieldPagerAdapter;
 
 /**
- * Created by Aleksandr Shvets on 01.12.2017.
+ * Created by Aleksandr Shvets
+ * on 01.12.2017.
  */
 
 public class MainActivity extends FragmentActivity {
@@ -29,7 +30,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void initViews() {
-        ((TextView)findViewById(R.id.am_start_game)).setTypeface(Typeface.createFromAsset(getAssets(), "hind_siliguri_light.ttf"));
+        ((TextView) findViewById(R.id.am_start_game)).setTypeface(Typeface.createFromAsset(getAssets(), "hind_siliguri_light.ttf"));
         findViewById(R.id.am_start_game).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

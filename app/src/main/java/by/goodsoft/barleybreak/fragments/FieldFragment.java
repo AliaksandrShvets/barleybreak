@@ -1,36 +1,35 @@
-package by.goodsoft.barleybreak;
+package by.goodsoft.barleybreak.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-
-import java.util.ArrayList;
 import java.util.List;
 
-import static by.goodsoft.barleybreak.managers.ItemsManager.FIELD_SIZE;
-import static by.goodsoft.barleybreak.managers.ItemsManager.generateStaticItems;
+import by.goodsoft.barleybreak.R;
+
+import static by.goodsoft.barleybreak.activities.GameActivity.FIELD_SIZE;
+import static by.goodsoft.barleybreak.managers.ItemsManager.*;
 
 /**
- * Created by Aleksandr Shvets on 16.12.2017.
+ * Created by Aleksandr Shvets
+ * on 16.12.2017.
  */
 
 public class FieldFragment extends Fragment {
 
     private static final String B_PAGE_NUMBER = "bRank";
 
-    View view;
-    List<View> views;
-    DisplayMetrics metrics;
-    int rank;
+    private List<View> views;
+    private DisplayMetrics metrics;
+    private int rank;
 
-    int fieldSize;
-    int fieldLeft;
-    int fieldTop;
-    int itemSize;
+    private int fieldLeft;
+    private int fieldTop;
+    private int itemSize;
 
     public static FieldFragment newInstance(int rank) {
         FieldFragment pageFragment = new FieldFragment();
@@ -55,14 +54,15 @@ public class FieldFragment extends Fragment {
     private void initFieldMetrics() {
         metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        fieldSize = (int) (metrics.widthPixels * FIELD_SIZE);
+        int fieldSize = (int) (metrics.widthPixels * FIELD_SIZE);
+        itemSize = fieldSize / rank;
         fieldLeft = (metrics.widthPixels - fieldSize) / 2;
         fieldTop = (metrics.heightPixels - metrics.widthPixels) / 2;
-        itemSize = fieldSize / rank;
     }
 
     private View getField(LayoutInflater inflater) {
-        view = inflater.inflate(R.layout.fragment_field_page, null);
+        @SuppressLint("InflateParams")
+        View view = inflater.inflate(R.layout.fragment_field_page, null);
         views = generateStaticItems(inflater, view, rank, itemSize, fieldLeft, fieldTop);
         return view;
     }
@@ -74,7 +74,7 @@ public class FieldFragment extends Fragment {
     public void setX(int x) {
         for (int i = 0; i < rank; i++) {
             for (int j = 0; j < rank; j++) {
-                views.get(i * rank + j).setX(itemSize * j + fieldLeft - x * (1 - (i + j) / (rank * 2f)) + x);
+                views.get(i * rank + j).setX(itemSize * j + fieldLeft - x * (1 - (i + j) / (rank * 2f)));
             }
         }
     }

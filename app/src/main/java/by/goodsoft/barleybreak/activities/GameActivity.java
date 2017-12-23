@@ -9,21 +9,25 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 import by.goodsoft.barleybreak.R;
 import by.goodsoft.barleybreak.callbacks.FieldActionCallback;
 import by.goodsoft.barleybreak.callbacks.StopwatchCallback;
 import by.goodsoft.barleybreak.managers.ItemsManager;
 import by.goodsoft.barleybreak.managers.StopwatchManager;
 
-import static by.goodsoft.barleybreak.managers.ItemsManager.FIELD_SIZE;
+import static by.goodsoft.barleybreak.items.Item.FONT_HIND_SILIGURI_LIGHT_TTF;
 
 /**
- * Created by Aleksandr Shvets on 01.12.2017.
+ * Created by Aleksandr Shvets
+ * on 01.12.2017.
  */
 
 public class GameActivity extends Activity {
 
     public static final String B_RANK = "bRank";
+    public static final float FIELD_SIZE = 0.9f;
 
     private FrameLayout field;
     private TextView timer;
@@ -49,7 +53,7 @@ public class GameActivity extends Activity {
         timer = findViewById(R.id.ag_timer);
         field = findViewById(R.id.ag_field);
         steps = findViewById(R.id.ag_steps);
-        steps.setTypeface(Typeface.createFromAsset(getAssets(), "hind_siliguri_light.ttf"));
+        steps.setTypeface(Typeface.createFromAsset(getAssets(), FONT_HIND_SILIGURI_LIGHT_TTF));
     }
 
     private void initField() {
@@ -62,6 +66,9 @@ public class GameActivity extends Activity {
 
             @Override
             public void onSwap(int count) {
+                if (!stopwatchManager.isStarted()) {
+                    stopwatchManager.startTimer();
+                }
                 steps.setText(String.valueOf(count));
             }
         });
@@ -71,14 +78,14 @@ public class GameActivity extends Activity {
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int fieldSize = (int) (metrics.widthPixels * FIELD_SIZE);
+        int itemSize = fieldSize / rank;
         int fieldLeft = (metrics.widthPixels - fieldSize) / 2;
         int fieldTop = (metrics.heightPixels - metrics.widthPixels) / 2;
-        int itemSize = fieldSize / rank;
         ItemsManager.generateStaticItems(getLayoutInflater(), findViewById(R.id.ag_field_static), rank, itemSize, fieldLeft, fieldTop);
     }
 
     private void initTimer() {
-        timer.setTypeface(Typeface.createFromAsset(getAssets(), "hind_siliguri_light.ttf"));
+        timer.setTypeface(Typeface.createFromAsset(getAssets(), FONT_HIND_SILIGURI_LIGHT_TTF));
         updateTime(0);
         stopwatchManager = new StopwatchManager(new StopwatchCallback() {
             @Override
@@ -102,7 +109,7 @@ public class GameActivity extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                timer.setText(String.format("%02d:%02d", seconds / 60, seconds % 60));
+                timer.setText(String.format(Locale.getDefault(), "%02d:%02d", seconds / 60, seconds % 60));
             }
         });
     }
@@ -110,14 +117,13 @@ public class GameActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        overridePendingTransition(0,0);
-        stopwatchManager.startTimer();
+        overridePendingTransition(0, 0);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        overridePendingTransition(0,0);
+        overridePendingTransition(0, 0);
         stopwatchManager.stopTimer();
     }
 }

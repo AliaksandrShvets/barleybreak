@@ -6,15 +6,16 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 
-import by.goodsoft.barleybreak.FieldFragment;
+import by.goodsoft.barleybreak.fragments.FieldFragment;
 
 /**
- * Created by Aleksandr Shvets on 16.12.2017.
+ * Created by Aleksandr Shvets
+ * on 16.12.2017.
  */
 
 public class FieldPagerAdapter extends FragmentPagerAdapter {
 
-    ArrayList<FieldFragment> fieldFragments = new ArrayList<>();
+    private ArrayList<FieldFragment> fieldFragments = new ArrayList<>();
 
     public FieldPagerAdapter(FragmentManager fm) {
         super(fm);
