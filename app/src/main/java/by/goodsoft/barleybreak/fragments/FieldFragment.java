@@ -7,12 +7,13 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import java.util.List;
 
 import by.goodsoft.barleybreak.R;
 
 import static by.goodsoft.barleybreak.activities.GameActivity.FIELD_SIZE;
-import static by.goodsoft.barleybreak.managers.ItemsManager.*;
+import static by.goodsoft.barleybreak.managers.ItemsManager.generateStaticItems;
 
 /**
  * Created by Aleksandr Shvets
@@ -71,10 +72,12 @@ public class FieldFragment extends Fragment {
         return rank;
     }
 
-    public void setX(int x) {
+    public void animateOffsetX(int x, boolean isLeft) {
         for (int i = 0; i < rank; i++) {
             for (int j = 0; j < rank; j++) {
-                views.get(i * rank + j).setX(itemSize * j + fieldLeft - x * (1 - (i + j) / (rank * 2f)));
+                float offset = isLeft ? x * (1 - (i + j) / (rank * 2f)) :
+                        (x - metrics.widthPixels) * ((i + j) / (rank * 2f));
+                views.get(i * rank + j).setX(itemSize * j + fieldLeft - offset);
             }
         }
     }

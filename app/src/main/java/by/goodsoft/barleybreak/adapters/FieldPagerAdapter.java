@@ -34,7 +34,10 @@ public class FieldPagerAdapter extends FragmentPagerAdapter {
         return fieldFragments.size();
     }
 
-    public void animate(int pos, int offset) {
-        fieldFragments.get(pos).setX(offset);
+    public void animateOffset(int pos, int offset) {
+        fieldFragments.get(pos).animateOffsetX(offset, true);
+        if (fieldFragments.size() > pos + 1) {
+            fieldFragments.get(pos + 1).animateOffsetX(offset, false);
+        }
     }
 }

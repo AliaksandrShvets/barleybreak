@@ -27,7 +27,7 @@ import static by.goodsoft.barleybreak.items.Item.FONT_HIND_SILIGURI_LIGHT_TTF;
 public class GameActivity extends Activity {
 
     public static final String B_RANK = "bRank";
-    public static final float FIELD_SIZE = 0.9f;
+    public static final float FIELD_SIZE = 0.85f;
 
     private FrameLayout field;
     private TextView timer;
@@ -66,7 +66,7 @@ public class GameActivity extends Activity {
 
             @Override
             public void onSwap(int count) {
-                if (!stopwatchManager.isStarted()) {
+                if (stopwatchManager != null && !stopwatchManager.isStarted()) {
                     stopwatchManager.startTimer();
                 }
                 steps.setText(String.valueOf(count));

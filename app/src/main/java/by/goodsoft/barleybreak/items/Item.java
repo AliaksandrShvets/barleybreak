@@ -2,6 +2,7 @@ package by.goodsoft.barleybreak.items;
 
 import android.graphics.Typeface;
 import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -47,10 +48,20 @@ public class Item {
     private void initView() {
         FrameLayout.LayoutParams itemParam = new FrameLayout.LayoutParams(itemSize, itemSize);
         view.setLayoutParams(itemParam);
-        view.setOnClickListener(new View.OnClickListener() {
+        view.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                callback.onClick(Item.this);
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        callback.onClick(Item.this);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        view.performClick();
+                        break;
+                    default:
+                        break;
+                }
+                return true;
             }
         });
         TextView itemText = view.findViewById(R.id.iv_text);
